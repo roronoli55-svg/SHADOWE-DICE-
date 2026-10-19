@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SHADOW DICE — Steal a Brainrot</title>
+<style>
+:root{--bg:#05040d;--panel:rgba(5,4,18,.91);--purple:#a927ff;--pink:#ec37ff;--line:#7721b8;--muted:#b9b1d7;--gold:#ffd52b}
+*{box-sizing:border-box}
+body{margin:0;color:#fff;font-family:Inter,Segoe UI,Arial,sans-serif;background:#05030b;min-height:100vh;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(ellipse at 13% 45%,#48108c 0,transparent 35%),radial-gradient(ellipse at 90% 32%,#35066c 0,transparent 32%),radial-gradient(ellipse at 50% 0,#19092e,transparent 50%),linear-gradient(120deg,#07040f,#080311 60%,#030209)}
+body:after{content:"👻     ✦      ♛      ✧       👻      ✦       ♛";position:fixed;inset:0;z-index:-1;pointer-events:none;color:#9d23ff;opacity:.11;font-size:clamp(30px,5vw,72px);letter-spacing:18px;line-height:2.3;word-break:break-all;text-shadow:0 0 22px #b700ff}
+button,select,input{font:inherit}button{cursor:pointer;color:#fff}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.shell{max-width:1500px;margin:auto;padding:18px 22px 0}
+.topbar{display:grid;grid-template-columns:290px 1fr 205px;gap:16px;align-items:center;margin-bottom:25px}
+.brand{font-weight:1000;font-style:italic;line-height:.78;letter-spacing:-2px;color:#fff;text-shadow:3px 3px 0 #7220c7,0 0 18px #a62bff;font-size:clamp(30px,4vw,55px);transform:skew(-5deg)}
+.brand small{display:block;font-size:12px;letter-spacing:1px;margin:13px 0 0 35px;color:#fff;text-shadow:none}
+.nav{display:flex;align-items:center;justify-content:space-around;gap:6px;border:1px solid #8c24c9;background:#080611;border-radius:16px;padding:8px;box-shadow:0 0 18px #5c0b8c44}
+.nav button,.owner-toggle{border:1px solid transparent;background:transparent;border-radius:10px;padding:12px 13px;white-space:nowrap}
+.nav button.active,.nav button:hover,.owner-toggle:hover{border-color:#a52bff;box-shadow:0 0 13px #b52bff55;background:#1a092c}
+.ownerbox{position:relative}
+.owner-toggle{border:1px solid #8623bc;width:100%;text-align:left;background:#080611}
+.owner-menu{display:none;position:absolute;top:calc(100% + 5px);right:0;width:100%;background:#090611;border:1px solid #7421a7;border-radius:12px;padding:7px;z-index:5;box-shadow:0 0 20px #6d0da255}
+.owner-menu.open{display:block}.owner-menu button{display:block;width:100%;text-align:left;background:none;border:0;border-radius:8px;padding:10px}.owner-menu button:hover{background:#28103f}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 370px;gap:16px;align-items:stretch}
+.panel{border:1px solid #a329e6;border-radius:19px;background:var(--panel);box-shadow:0 0 20px #730db733,inset 0 0 22px #29083a33}
+.mainpanel{padding:20px 22px}
+h1{font-size:clamp(24px,3vw,43px);text-align:center;text-transform:uppercase;font-weight:1000;font-style:italic;letter-spacing:1px;color:#f5eaff;text-shadow:0 0 15px #b52cff;margin:0 0 20px}
+.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+select,.field{width:100%;min-width:0;border:1px solid #6650a2;border-radius:12px;background:#080714;color:white;padding:13px 12px}
+.dice-row{display:flex;justify-content:center;align-items:center;gap:clamp(10px,3vw,28px);flex-wrap:wrap;min-height:140px;padding:24px 0}
+.die{width:clamp(64px,8vw,100px);aspect-ratio:1;border:5px solid white;border-radius:22px;display:grid;place-items:center;box-shadow:0 0 18px currentColor,inset 0 0 8px #fff8;transition:transform .16s;background:#167cff}
+.die.roll{animation:roll .35s ease}@keyframes roll{0%{transform:rotate(0) scale(1)}45%{transform:rotate(18deg) scale(.82)}100%{transform:rotate(0) scale(1)}}
+.dot{width:19%;aspect-ratio:1;background:#fff;border-radius:50%;box-shadow:0 0 5px #fff}
+.rollbtn{display:block;width:100%;border:1px solid #ff8bff;border-radius:15px;background:linear-gradient(110deg,#8e16e7,#bf21ff 50%,#7812cf);box-shadow:0 0 18px #a700ff77,inset 0 0 9px #fff4;padding:16px;font-size:clamp(20px,3vw,34px);font-weight:1000;font-style:italic;text-shadow:2px 2px #501077;margin:4px 0 18px}
+.rollbtn:hover{filter:brightness(1.16)}.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}.stat{border:1px solid #514080;border-radius:12px;padding:12px;min-height:74px;background:#070611}.stat strong{display:block;font-size:19px;margin-top:5px}.green{color:#31f5a4}
+.colorstats{display:flex;flex-direction:column;gap:4px}.colorline{display:flex;justify-content:space-between;align-items:center;font-size:13px}.swatch{width:17px;height:17px;border-radius:5px;border:1px solid white;display:inline-block;margin-right:8px;vertical-align:middle}
+.sectiontitle{display:flex;align-items:center;gap:12px;color:#e78aff;font-weight:1000;font-style:italic;justify-content:center;margin:25px 0 12px;text-shadow:0 0 10px #8c1ac6}
+.sectiontitle:before,.sectiontitle:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,transparent,#c22aff)}
+.history{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;background:#05040d;border:1px solid #34224f;border-radius:12px;padding:12px}
+.historyitem{display:flex;align-items:center;gap:7px;font-size:13px;min-width:0}.historydice{display:flex;gap:3px;flex-wrap:wrap}.mini{width:17px;height:17px;border:1px solid white;border-radius:4px;display:inline-block}
+.sidebar{padding:18px}.sidebar h2{margin:0 0 5px;color:#ffe348;font-size:22px}.sub{color:#d9d0eb;font-size:13px;margin:0 0 12px}
+.viplist{display:flex;flex-direction:column;gap:6px}.vipitem{display:grid;grid-template-columns:42px 1fr auto;gap:10px;align-items:center;border:1px solid #6550a2;border-radius:12px;padding:8px;background:#070611}.avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#7024b9,#10051c);border:2px solid #a51cff;font-size:21px}.vipname{font-size:14px;overflow-wrap:anywhere}.handle{font-size:12px;color:#bdb1e3;margin-top:3px}.crown{color:var(--gold);font-size:22px}.addbox{border:1px dashed #b8a8d8;border-radius:12px;padding:15px;margin-top:14px}.addbox h3{margin:0 0 10px}.addbox input{margin-bottom:8px}.smallbtn{border:1px solid #a33bdb;border-radius:9px;padding:10px 12px;background:#5e1590}.smallbtn.secondary{background:#151021;border-color:#51416c}.smallbtn.danger{border-color:#a93c53;background:#38101b}.rowbuttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.owner-only{display:none}.owner-mode .owner-only{display:block}
+footer{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:18px -22px 0;padding:14px 22px;border-top:1px solid #8723bf;background:#04030b}
+.footerbrand{color:#dc6aff;font-weight:1000;font-style:italic}.sound{display:flex;align-items:center;gap:8px;border:1px solid #5c3985;border-radius:24px;padding:8px 12px;background:#090612}.sound button{background:none;border:0}.notice{color:#bcb2d4;font-size:12px;margin-top:10px;line-height:1.5}
+.modal{display:none;position:fixed;inset:0;background:#000b;z-index:10;align-items:center;justify-content:center;padding:20px}.modal.show{display:flex}.modalbox{max-width:480px;width:100%;background:#0b0715;border:1px solid #a52cff;border-radius:16px;padding:20px;box-shadow:0 0 30px #8c13c766}.modalbox h2{margin-top:0}.modalbox p{color:#cfc4e4;line-height:1.5}
+@media(max-width:1000px){.topbar{grid-template-columns:1fr;gap:12px}.brand{text-align:center}.brand small{margin-left:0}.nav{flex-wrap:wrap}.ownerbox{max-width:240px;justify-self:center;width:100%}.layout{grid-template-columns:1fr}.sidebar{order:2}}
+@media(max-width:600px){.shell{padding:12px 10px 0}.mainpanel{padding:14px 11px}.controls{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.colorstat{grid-column:1/-1}.history{grid-template-columns:repeat(2,minmax(0,1fr))}.nav button{padding:9px 10px;font-size:13px}.die{border-radius:16px;border-width:4px}.sidebar{padding:13px}footer{margin:14px -10px 0;padding:12px 10px;flex-wrap:wrap}.sound{font-size:12px}}
+</style>
+</head>
+<body>
+<div class="shell" id="app">
+<header class="topbar">
+  <div class="brand">SHADOW<br>DICE 🎲<small>STEAL A BRAINROT</small></div>
+  <nav class="nav" aria-label="Main navigation">
+    <button class="active" data-scroll="home">⌂ &nbsp;Home</button><button data-scroll="dicearea">🎲 &nbsp;Dice</button><button data-scroll="viparea">♛ &nbsp;VIP</button><button data-scroll="historyarea">▥ &nbsp;Leaderboard</button><button id="settingsNav">⚙ &nbsp;Settings⌄</button>
+  </nav>
+  <div class="ownerbox"><button class="owner-toggle" id="ownerToggle">♟ &nbsp;Owner　⌄</button><div class="owner-menu" id="ownerMenu"><button data-modal="account">♟　Account</button><button data-modal="settings">⚙　Settings</button><button id="ownerMode">♛　Owner mode</button></div></div>
+</header>
+<div class="layout" id="home">
+<section class="panel mainpanel" id="dicearea">
+  <h1>👻 &nbsp; Roll Colored Dice &nbsp; 👻</h1>
+  <div class="controls">
+    <select id="diceCount" aria-label="Number of dice"><option value="1">🎲 1 Dice</option><option value="2">🎲 2 Dice</option><option value="3">🎲 3 Dice</option><option value="4" selected>🎲 4 Dice</option><option value="5">🎲 5 Dice</option><option value="6">🎲 6 Dice</option><option value="8">🎲 8 Dice</option></select>
+    <select id="diceStyle" aria-label="Dice style"><option value="classic">🎨 Classic</option><option value="neon">✨ Neon</option><option value="ghost">👻 Ghost</option></select>
+    <select id="palette" aria-label="Dice colors"><option value="colored">🎨 Colored</option><option value="purple">💜 Purple</option><option value="random">🌈 Random</option></select>
+  </div>
+  <div class="dice-row" id="dice" aria-live="polite"></div>
+  <button class="rollbtn" id="rollBtn">🎲 ROLL AGAIN !</button>
+  <div class="stats">
+    <div class="stat">◷ &nbsp; Last Rules<select id="historyFilter" style="margin-top:8px;padding:7px"><option value="25">Last 25 rolls</option><option value="60">Last 60 minutes</option><option value="all">All saved rolls</option></select></div>
+    <div class="stat">🟢 &nbsp; Users Online<strong class="green" id="onlineCount">1</strong><span style="font-size:11px;color:#bdb1d7">This page session</span></div>
+    </div>
+  </div>
+  <div class="sectiontitle" id="historyarea">LAST 25 ROLLS</div><div class="history" id="history"></div>
+  <div class="notice">Demo stats are stored on this device only. “Users Online” is a local session indicator, not a global website counter.</div>
+</section>
+<aside class="panel sidebar" id="viparea">
+  <h2><span style="font-size:34px;vertical-align:middle;margin-right:8px">👑</span> VIP / TOP STREAMERS</h2><p class="sub">Support these creators!</p>
+  <div class="viplist" id="vipList"></div>
+  <div class="addbox owner-only" id="addBox"><h3>＋ Add TikTok Account</h3><input class="field" id="vipDisplay" placeholder="Display name (optional)" maxlength="40"><input class="field" id="vipHandle" placeholder="TikTok username (without @)" maxlength="40"><button class="smallbtn" id="addVip">＋ Add account</button><p class="notice">Owner demo: accounts are saved in this browser only. This does not connect to TikTok.</p></div>
+  <div class="notice" id="vipNotice">TikTok LIVE status is not verified in this standalone demo.</div>
+</aside>
+</div>
+<footer><div><span style="font-size:25px">♛</span> <span class="footerbrand">SHADOW DICE</span>　│　<span style="font-size:12px;color:#bdb1d7">A fan-made game for Steal a Brainrot.</span></div><div class="sound"><span>🔊</span><button id="soundBtn">Sound: <b id="soundState">ON</b></button><input type="range" id="volume" min="0" max="100" value="55" aria-label="Sound volume" style="width:70px;accent-color:#a927ff"></div><button class="smallbtn secondary" id="helpBtn" aria-label="Help">?</button></footer>
+</div>
+<div class="modal" id="modal"><div class="modalbox"><h2 id="modalTitle">Settings</h2><div id="modalContent"></div><div class="rowbuttons"><button class="smallbtn" id="closeModal">Close</button></div></div></div>
+<script>
+(function(){
+const COLORS=['#20d84a','#ff254f','#1685ff','#ffdf24','#b72cff','#ff8a16'];
+const PURPLE=['#20d84a','#ff254f','#1685ff','#ffdf24','#b72cff','#ff8a16'];
+const KEYH='shadowDiceHistoryV1', KEYV='shadowDiceVipsV1', KEYS='shadowDiceSettingsV1';
+let history=read(KEYH,[]), vips=read(KEYV,[
+ {name:'YourTikTok1',handle:'yourname1'}, {name:'YourTikTok2',handle:'yourname2'},
+ {name:'YourTikTok3',handle:'yourname3'}, {name:'YourTikTok4',handle:'yourname4'},
+ {name:'YourTikTok5',handle:'yourname5'}, {name:'YourTikTok6',handle:'yourname6'},
+ {name:'YourTikTok7',handle:'yourname7'}, {name:'YourTikTok8',handle:'yourname8'}
+]), settings=read(KEYS,{sound:true,volume:55}), owner=false, audioCtx=null;
+function read(k,f){try{let v=JSON.parse(localStorage.getItem(k));return v??f}catch(e){return f}}
+function save(){try{localStorage.setItem(KEYH,JSON.stringify(history.slice(0,200)));localStorage.setItem(KEYV,JSON.stringify(vips));localStorage.setItem(KEYS,JSON.stringify(settings))}catch(e){}}
+function currentColors(){let p=document.getElementById('palette').value;return p==='purple'?PURPLE:p==='random'?[...COLORS].sort(()=>Math.random()-.5):COLORS}
+function renderDice(vals,animate=false){const wrap=document.getElementById('dice');wrap.innerHTML='';let colors=currentColors();vals.forEach((v,i)=>{let d=document.createElement('div');d.className='die'+(animate?' roll':'');let c=colors[i%colors.length];d.style.background=c;d.style.color=c;if(document.getElementById('diceStyle').value==='neon')d.style.boxShadow='0 0 27px '+c+',inset 0 0 8px #fff8';if(document.getElementById('diceStyle').value==='ghost'){d.style.background='linear-gradient(145deg,#1a102a,'+c+')';d.innerHTML='<span style="font-size:32px">👻</span>'}else d.innerHTML='<span class="dot"></span>';wrap.appendChild(d)})}
+function sound(){if(!settings.sound||Number(document.getElementById('volume').value)===0)return;try{audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();let o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.setValueAtTime(620,audioCtx.currentTime);o.frequency.exponentialRampToValueAtTime(260,audioCtx.currentTime+.12);g.gain.setValueAtTime(Number(document.getElementById('volume').value)/100*.12,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.15);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+.16)}catch(e){}}
+function roll(){let n=Number(document.getElementById('diceCount').value),colors=currentColors(),vals=Array.from({length:n},(_,i)=>({color:colors[i%colors.length],face:1}));renderDice(vals,true);sound();history.unshift({colors:vals.map(v=>v.color),time:Date.now()});history=history.slice(0,200);save();renderHistory();renderStats()}
+function renderHistory(){let el=document.getElementById('history'),f=document.getElementById('historyFilter').value;el.innerHTML='';let list=history;if(f==='25')list=history.slice(0,25);else if(f==='60')list=history.filter(x=>Date.now()-x.time<3600000).slice(0,25);else list=history.slice(0,200);if(!list.length){el.innerHTML='<span style="color:#bdb1d7">Roll the dice to start your history.</span>';return}list.forEach((r,i)=>{let item=document.createElement('div');item.className='historyitem';let num=document.createElement('span');num.textContent=(i+1)+'.';let ds=document.createElement('span');ds.className='historydice';(r.colors||[]).forEach(c=>{let s=document.createElement('i');s.className='mini';s.style.background=c;ds.appendChild(s)});item.append(num,ds);el.appendChild(item)})}
+function renderStats(){}
+function renderVips(){let list=document.getElementById('vipList');list.innerHTML='';vips.forEach((v,i)=>{let row=document.createElement('div');row.className='vipitem';let av=document.createElement('div');av.className='avatar';av.textContent='👑';let info=document.createElement('div');let name=document.createElement('div');name.className='vipname';name.textContent=v.name||('@'+v.handle);let handle=document.createElement('div');handle.className='handle';handle.textContent='@'+v.handle;info.append(name,handle);let right=document.createElement('div');right.className='crown';right.textContent='♛';row.append(av,info,right);if(owner){let del=document.createElement('button');del.className='smallbtn danger';del.textContent='×';del.title='Remove account';del.onclick=()=>{vips.splice(i,1);save();renderVips()};row.appendChild(del)}list.appendChild(row)});document.getElementById('vipNotice').textContent='LIVE status unavailable: this page cannot verify TikTok broadcasts without a trusted external service.'}
+function toggleOwner(){owner=!owner;document.getElementById('app').classList.toggle('owner-mode',owner);document.getElementById('ownerToggle').innerHTML=(owner?'♛ &nbsp;Owner mode':'♟ &nbsp;Owner')+'　⌄';renderVips();document.getElementById('ownerMenu').classList.remove('open')}
+function showModal(kind){let title='Settings',content='';if(kind==='account'){title='Account';content='<p>This is a local demo. There is no real sign-in or account system connected.</p>'}else if(kind==='settings'){title='Settings';content='<p>Choose the dice count, style, colors, and sound using the controls on the main page.</p><button class="smallbtn secondary" id="clearHistory">Clear roll history</button> <button class="smallbtn secondary" id="resetVips">Reset sample VIP list</button>'}else{title='How to use Shadow Dice';content='<p>Choose the number of dice and style, then press ROLL AGAIN. Your last 25 rolls appear below and are saved in this browser. Owner mode is a demonstration, not secure access control. TikTok LIVE status is not connected.</p>'}document.getElementById('modalTitle').textContent=title;document.getElementById('modalContent').innerHTML=content;document.getElementById('modal').classList.add('show');let c=document.getElementById('clearHistory');if(c)c.onclick=()=>{history=[];save();renderHistory();renderStats()};let r=document.getElementById('resetVips');if(r)r.onclick=()=>{vips=[];save();renderVips()}}
+document.getElementById('rollBtn').onclick=roll;
+document.getElementById('diceCount').onchange=()=>renderDice(Array.from({length:Number(document.getElementById('diceCount').value)},()=>1));
+document.getElementById('diceStyle').onchange=()=>renderDice(Array.from({length:Number(document.getElementById('diceCount').value)},()=>1));
+document.getElementById('palette').onchange=()=>renderDice(Array.from({length:Number(document.getElementById('diceCount').value)},()=>1));
+document.getElementById('historyFilter').onchange=renderHistory;
+document.getElementById('soundBtn').onclick=()=>{settings.sound=!settings.sound;document.getElementById('soundState').textContent=settings.sound?'ON':'OFF';save()};
+document.getElementById('volume').oninput=e=>{settings.volume=Number(e.target.value);save()};
+document.getElementById('ownerToggle').onclick=()=>document.getElementById('ownerMenu').classList.toggle('open');
+document.querySelectorAll('[data-modal]').forEach(b=>b.onclick=()=>showModal(b.dataset.modal));
+document.getElementById('ownerMode').onclick=toggleOwner;
+document.getElementById('settingsNav').onclick=()=>showModal('settings');
+document.getElementById('helpBtn').onclick=()=>showModal('help');
+document.getElementById('closeModal').onclick=()=>document.getElementById('modal').classList.remove('show');
+document.getElementById('modal').onclick=e=>{if(e.target.id==='modal')e.currentTarget.classList.remove('show')};
+document.querySelectorAll('[data-scroll]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.scroll).scrollIntoView({behavior:'smooth',block:'start'})});
+document.getElementById('addVip').onclick=()=>{if(!owner){alert('Turn on Owner mode first.');return}let handle=document.getElementById('vipHandle').value.trim().replace(/^@/,'');let name=document.getElementById('vipDisplay').value.trim();if(!handle){alert('Enter a TikTok username first.');return}if(!/^[a-zA-Z0-9._]{2,40}$/.test(handle)){alert('Please enter a valid username using letters, numbers, dots or underscores.');return}if(vips.some(v=>v.handle.toLowerCase()===handle.toLowerCase())){alert('That username is already in the list.');return}vips.push({name:name||'@'+handle,handle});save();renderVips();document.getElementById('vipHandle').value='';document.getElementById('vipDisplay').value=''};
+document.getElementById('soundState').textContent=settings.sound?'ON':'OFF';document.getElementById('volume').value=settings.volume;document.getElementById('onlineCount').textContent='1';
+renderDice(Array.from({length:4},()=>1));renderHistory();renderStats();renderVips();
+})();
+</script>
+</body>
+</html>
